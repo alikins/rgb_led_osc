@@ -5,7 +5,7 @@ int message = 0;     //  This will hold one byte of the serial message
 int redLEDPin = 9;   //  What pin is the red LED connected to?
 int yellowLEDPin = 8;
 int redLED = 0;          //  The value/brightness of the LED, can be 0-255
-int yellowLED = 0
+int yellowLED = 0;
 int redValue = 0;
 int yellowValue = 0;
 
