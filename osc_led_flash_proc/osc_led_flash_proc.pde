@@ -25,34 +25,36 @@ void oscEvent(OscMessage theOscMessage) {   //  This runs whenever there is a ne
 
     String addr = theOscMessage.addrPattern();  //  Creates a string out of the OSC message
     println("osc msg: " + addr);
-    println("osc msg.typetag: " + theOscMessage.typetag());
+  //  println("osc msg.typetag: " + theOscMessage.typetag());
     theOscMessage.printData();
     
     if(addr.indexOf("/1/toggle") !=-1){   // Filters out any toggle buttons
       int i = int((addr.charAt(9) )) - 0x30;   // returns the ASCII number so convert into a real number by subtracting 0x30
       led[i]  = int(theOscMessage.get(0).floatValue());     //  Puts button value into led[i]
-      leds[1][0] = int(theOscMessage.get(0).floatValue());
+      leds[i][0] = int(theOscMessage.get(0).floatValue());
     // Button values can be read by using led[0], led[1], led[2], etc    
     }
-    if(addr.indexOf("/1/fader1") !=-1) {
-      
+    if(addr.indexOf("/1/fader") !=-1) {
+      int i = int((addr.charAt(8) )) - 0x30;
+      println("i: " + i);
 //      println("msg: " + addr);
       float firstValue = theOscMessage.get(0).floatValue();
 //      println("firstValue: " + firstValue);
-      leds[1][1] = int(firstValue*255);
+      leds[i][1] = int(firstValue*255);
    //   String secondValue = theOscMessage.get(1).stringValue();
     //  println("secondValue: " + secondValue);
      // float thirdValue = theOscMessage.get(2).floatValue();
      // print("### received an osc message /test with typetag ifs.");
    //   println(" values: "+firstValue+", "+secondValue+", "+thirdValue);
     }
+  
 }
 
 void draw() {
   
  background(50);        // Sets the background to a dark grey, can be 0-255
 
-  println("leds[1][1]: " + leds[1][1]);
+  //println("leds[1][1]: " + leds[1][1]);
    if(leds[1][0] == 0){        //  If led button 1 if off do....
     //arduinoPort.write("r");    // Sends the character “r” to Arduino
     redLED = 0;        // Sets redLED color to 0, can be 0-255
