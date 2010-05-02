@@ -1,0 +1,14 @@
+
+Code to drive an rgb led attached to an arduino. 
+
+Processing is used to accept OSC messages, and forward them
+over a the serial port/usb to an arduino, which controls
+the rgb led.
+
+The touchOSC file is a control layout for the touchOSC iphone
+app. 
+
+In other words, make a small light change colors via a gui
+on your iphone.
+
+
