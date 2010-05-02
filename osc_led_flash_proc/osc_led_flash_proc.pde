@@ -9,8 +9,9 @@ Serial arduinoPort;        //  Set arduinoPort as serial connection
 OscP5 oscP5;            //  Set oscP5 as OSC connection
 
 int redLED = 0;        //  redLED lets us know if the LED is on or off
-int yellowLED = 0;
-int [][] leds = new int[3][2];
+int greenLED = 0;
+int blueLED = 0;
+int [][] leds = new int[4][2];
 
 void setup() {
   frameRate(15);
@@ -27,12 +28,12 @@ void oscEvent(OscMessage theOscMessage) {   //  This runs whenever there is a ne
   //  println("osc msg.typetag: " + theOscMessage.typetag());
     theOscMessage.printData();
     
-    if(addr.indexOf("/accxyz") !=-1) {
-       float x = theOscMessage.get(0).floatValue();
-       float y = theOscMessage.get(1).floatValue();
-       leds[1][1] = int(x*255);
-       leds[2][1] = int(y*255);
-    }
+//    if(addr.indexOf("/accxyz") !=-1) {
+//       float x = theOscMessage.get(0).floatValue();
+//       float y = theOscMessage.get(1).floatValue();
+//       leds[1][1] = int(x*255);
+//       leds[2][1] = int(y*255);
+//    }
     
     if(addr.indexOf("/1/xy") !=-1) {
        float x = theOscMessage.get(0).floatValue();
@@ -43,7 +44,10 @@ void oscEvent(OscMessage theOscMessage) {   //  This runs whenever there is a ne
     if(addr.indexOf("/1/toggle") !=-1){   // Filters out any toggle buttons
       int i = int((addr.charAt(9) )) - 0x30;   // returns the ASCII number so convert into a real number by subtracting 0x30
       //led[i]  = int(theOscMessage.get(0).floatValue());     //  Puts button value into led[i]
-      leds[i][0] = int(theOscMessage.get(0).floatValue());
+      leds[1][0] = int(theOscMessage.get(0).floatValue());
+      leds[2][0] = int(theOscMessage.get(0).floatValue());
+      leds[3][0] = int(theOscMessage.get(0).floatValue());
+ //     leds[i]
     // Button values can be read by using led[0], led[1], led[2], etc    
     }
     if(addr.indexOf("/1/fader") !=-1) {
@@ -51,15 +55,15 @@ void oscEvent(OscMessage theOscMessage) {   //  This runs whenever there is a ne
 //      println("i: " + i);
 //      println("msg: " + addr);
       float firstValue = theOscMessage.get(0).floatValue();
-//      println("firstValue: " + firstValue);
       leds[i][1] = int(firstValue*255);
- 
- 
-   //   String secondValue = theOscMessage.get(1).stringValue();
-    //  println("secondValue: " + secondValue);
-     // float thirdValue = theOscMessage.get(2).floatValue();
-     // print("### received an osc message /test with typetag ifs.");
-   //   println(" values: "+firstValue+", "+secondValue+", "+thirdValue);
+    }
+    if(addr.indexOf("/2/rotary") !=-1) {
+      int i = int((addr.charAt(9) )) - 0x30;
+//      println("i: " + i);
+//      println("msg: " + addr);
+      float firstValue = theOscMessage.get(0).floatValue();
+//      println(firstValue);
+      leds[i][1] = int(firstValue*255);
     }
   
 }
@@ -71,15 +75,18 @@ void draw() {
   //println("leds[1][1]: " + leds[1][1]);
    if(leds[1][0] == 0){        //  If led button 1 if off do....
     redLED = 0;               // Sets redLED color to 0, can be 0-255
+    arduinoPort.write('R');
     arduinoPort.write(redLED);
+    arduinoPort.write(greenLED);
+    arduinoPort.write(blueLED);
   }
   
   //println("a: " + leds[1][0] + " b: " + leds[1][1]);
  if(leds[1][0] == 1){        // If led button 1 is ON do...
-  redLED = leds[1][1];        // Sets redLED color to 255, can be 0-255
-  arduinoPort.write(redLED);
-  yellowLED = leds[2][1];
-  arduinoPort.write(yellowLED);
+  arduinoPort.write('R');
+  arduinoPort.write(leds[1][1]);
+  arduinoPort.write(leds[2][1]);
+  arduinoPort.write(leds[3][1]);
   //println("foo: " + yellowLED);
   }
   
